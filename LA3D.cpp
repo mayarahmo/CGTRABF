@@ -1,16 +1,25 @@
+#ifndef LA3D_LIB
+#define LA3D_LIB
 #include<GL/gl.h>
 #include<cmath>
 
 typedef struct t_ponto3 {
     GLfloat x,y,z;
 } Ponto;
+
 typedef Ponto Vetor;
+
 typedef struct t_aresta3 {
     Ponto primeiro,segundo;
 } Aresta;
+
 typedef struct t_tri3{
     Ponto raiz,direito,esquerdo;
 } Triangulo;
+
+bool equals(Ponto a, Ponto b){
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
 
 Ponto add(Ponto a, Ponto b){
     a.x+=b.x; a.y+=b.y; a.z+=b.z;
@@ -64,3 +73,4 @@ Ponto vectorial(Ponto primeiro, Ponto segundo){
 Ponto normalAt(Triangulo t){
     return vectorial(sub(t.direito,t.raiz),sub(t.esquerdo,t.raiz));
 }
+#endif
