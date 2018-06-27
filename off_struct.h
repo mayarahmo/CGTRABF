@@ -11,7 +11,7 @@ void insertPoint(off_set & set, Ponto p){
     set.pontos.push_back(p);
 }
 
-void insertFace(&off_set & set, int idx1, int idx2, int idx3){
+void insertFace(off_set & set, int idx1, int idx2, int idx3){
 
 	Triangulo t;
 
