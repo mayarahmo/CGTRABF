@@ -1,5 +1,4 @@
 #include "LA3D.cpp"
-#include <stdio.h>
 #include<vector>
 
 typedef struct t_off_set {
