@@ -27,7 +27,7 @@ Ponto add(Ponto a, Ponto b){
 }
 
 Ponto sub(Ponto a, Ponto b){
-    b.x-=a.x; b.y-=b.y; b.z-=a.z;
+    b.x-=a.x; b.y-=a.y; b.z-=a.z;
     return b;
 }
 
@@ -55,11 +55,13 @@ void atrib(Ponto& p, GLfloat x, GLfloat y, GLfloat z){
 }
 
 GLfloat norm(Ponto p){
-    return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);
+    GLfloat res = sqrt(p.x*p.x+p.y*p.y+p.z*p.z);
+    if(res == 0) return 1;
+    return res;
 }
 
 Ponto normPonto(Ponto p){
-    return scale(1/sqrt(p.x*p.x+p.y*p.y+p.z*p.z),p);
+    return scale(1.0/norm(p),p);
 }
 
 Ponto vectorial(Ponto primeiro, Ponto segundo){
