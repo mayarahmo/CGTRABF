@@ -1,6 +1,7 @@
 #include "LA3D.cpp"
 #include <vector>
 #include <stdio.h>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -29,24 +30,42 @@ void insertFace(off_set & set, int idx1, int idx2, int idx3){
 }
 
 off_set makeOffSet(std::string filename){
-	std::cout << filename;
-	std::ifstream infile(filename);
+
+	off_set set;
+	int i;
+	int vertices, faces, arestas;
+	float x, y, z;
+	Ponto p;
+	int numVert, idx1, idx2, idx3;
+	
+	std::ifstream infile(filename.c_str());
 
 	std::string line;
-	std::getline(infile, line);
+	std::getline(infile,line);
+	std::getline(infile,line);	
 	std::istringstream iss(line);
-	int a, b, c;
-	iss >> a >> b;
-	printf("%d", a);
+	iss >> vertices >> faces >> arestas;
 
-	/*while (std::getline(infile, line)){
+	for(i = 0; i < vertices; i++){
 
+		std::getline(infile,line);
 	    std::istringstream iss(line);
-	    int a, b;
-	    if (!(iss >> a >> b)) { break; } // error
+	    iss >> x >> y >>z;
 
-	    // process pair (a,b)
-	}*/
+	    p = makePonto(x, y, z);
+		insertPoint(set, p);
+	}
+
+	for(i = 0; i < faces; i++){
+
+		std::getline(infile,line);
+	    std::istringstream iss(line);
+	    iss >> numVert >> idx1 >> idx2 >>idx3;
+
+	    insertFace(set, idx1, idx2, idx3);
+	}
+
+	return set;
 }
 
 int main(void){
