@@ -1,18 +1,15 @@
-// ...
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#	include <windows.h>
+#include <windows.h>
 #include <GL/glut.h>
 
 #include "CHE.cpp"
 #include "ArcBall.cpp"
-
+#include "transform2.cpp"
 
 ArcBall arcball ;
 CHE che ;
-
 
 /****************************************************/
 void display_cb(void)
@@ -23,12 +20,10 @@ void display_cb(void)
   glLoadIdentity();
   glMultMatrixd( arcball.get_rotation_matrix() ) ;
   
-  
   {
     glColor3f(1,1,1);
     glutWireSphere( 2.0, 8, 6 ) ;
   }
-  
   
   glDisable(GL_BLEND) ;
   glColor4f(1,1,0,1);
@@ -48,15 +43,34 @@ void display_cb(void)
 
       glNormal3fv( v2.nxyz() ) ;
       glVertex3fv( v2. xyz() ) ;
-}
+    }
   }
   glEnd() ;
+
+  glDisable(GL_BLEND) ;
+  glLineWidth(3.0);
+  glBegin( GL_LINES ) ;
+  {
+    glColor4f(1.0,0.0,0.0,0.5);
+    glVertex3f(-10.0,0.0,0.0);
+    glVertex3f(10.0,0.0,0.0);
+
+    glColor4f(0.0,1.0,0.0,0.5);
+    glVertex3f(0.0,-10.0,0.0);
+    glVertex3f(0.0,10.0,0.0);
+
+    glColor4f(0.0,0.0,1.0,0.5);
+    glVertex3f(0.0,0.0,-10.0);
+    glVertex3f(0.0,0.0,10.0);
+  }glEnd();
 
   glDisable(GL_BLEND) ;
   glColor4f(0.5,0.5,0.5,0.5);
   glLineWidth(1.0);
   glBegin( GL_LINES ) ;
   {
+    glVertex3f(0.0,0.0,0.0);
+    glVertex3f(1.0,0.0,0.0);
     for( CHE::t_iterator it = che.t_begin() ; it() ; ++it )
     {
       CHE::v_iterator v0 = che.v_begin(it.v0() ) ;
@@ -176,6 +190,23 @@ void keyboard_cb(unsigned char key, int x, int y)
 
     case 'c': che.read_off( "cone.off" );
       break;
+
+    case 'e': che.read_off("sphere2.off");
+      break;
+
+    case 's': sine(1,1,1,che);
+      break;
+
+    case 'k': kfunction(che);
+      break;
+
+    case 'j': cosine(1,1,1,che);
+      break;
+
+    case 'g': quadratic(1,1,1,che);
+      break;
+
+    case 'l': linear(1,1,1,che);
   }
   
   glutPostRedisplay();
@@ -227,6 +258,10 @@ int main(int argc, char** argv)
 
   // Turn the flow of control over to GLUT
   glutMainLoop ();
+  //che.read_off( "tetra.off" ) ;
+  //kfunction(che);
+  //printf("enter...\n");
+  //scanf("PRESSIONE ENTER");
 
   return 0;
 }
