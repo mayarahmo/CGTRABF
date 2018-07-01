@@ -133,9 +133,13 @@ Ponto vit_to_point(CHE::v_iterator vit){
 }
 
 GLfloat kfunc(HEid itt, CHE& mesh){
+    //printf("1: %d %d\n",itt,mesh.ori(itt));
     CHE::v_iterator next = mesh.v_begin(mesh.next(itt));;
+    //printf("2: %d\n",itt);
     CHE::v_iterator prev = mesh.v_begin(mesh.prev(itt));
+    //printf("3: %d\n",itt);
     CHE::v_iterator he = mesh.v_begin(mesh.ori(itt));
+    //printf("4: %d\n",itt);
     Vid start = mesh.next(itt);;
     
     GLfloat sum = 4*atan(1.0);
@@ -150,11 +154,13 @@ GLfloat kfunc(HEid itt, CHE& mesh){
         pprev = vit_to_point(prev);
 
         Vetor a, b;
-        a = sub(praiz,pnext);
-        b = sub(praiz,pprev);
-        printf("%f %f %f\n",a.x,a.y,a.z);
-        printf("%f %f %f\n",b.x,b.y,b.z);
-        sum = sum - acos( dot(a,b)/(norm(a)*norm(b)) );
+        a = normPonto(sub(praiz,pnext));
+        b = normPonto(sub(praiz,pprev));
+        //printf("%f %f %f\n",a.x,a.y,a.z);
+        //printf("%f %f %f\n",b.x,b.y,b.z);
+        if(dot(a,b) > 1) sum = sum - acos(0.9);
+        else if(dot(a,b) < 1) sum = sum - acos(-0.9);
+        else sum = sum - acos( dot(a,b) );
         itt = mesh.opp(mesh.prev(itt));
     }while(start != mesh.next(itt));
     return sum;
@@ -165,7 +171,7 @@ void KTransform(HEid heid, CHE& mesh){
     Vetor normal = makePonto(vit.nx(),vit.ny(),vit.nz());
     Ponto p = makePonto(vit.x(),vit.y(),vit.z());
     GLfloat func = kfunc(heid,mesh);
-    printf("%f\n",func);
+    //printf("%f\n",func);
     p = add(p,scale(func,normal));
     coord* vertex = vit.xyz();
     vertex[0] = p.x;
@@ -174,8 +180,10 @@ void KTransform(HEid heid, CHE& mesh){
 }
 
 void kfunction(CHE& mesh){
+    std::set<Vid> vids;
     for(HEid it = 0; it < mesh.n_trigs(); ++it){
-        KTransform(it,mesh);
+        if(vids.find(mesh.ori(it)) == vids.end()) KTransform(it,mesh);
+        vids.insert(mesh.ori(it));
     }
     if(!mesh.fit_to_bbox()) printf("Deu ruim no bbox\n");
     if(!mesh.compute_normals()) printf("Deu ruim nas normais!\n");
